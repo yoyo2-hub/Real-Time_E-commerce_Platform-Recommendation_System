@@ -1,0 +1,16 @@
+# Fichiers sensibles
+src/main/resources/client.truststore.jks
+
+src/main/resources/application.properties
+
+
+# Fichiers de build
+target/
+
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
