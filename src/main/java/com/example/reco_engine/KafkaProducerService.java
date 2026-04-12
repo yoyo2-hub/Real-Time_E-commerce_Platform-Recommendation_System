@@ -3,6 +3,7 @@ package com.example.reco_engine;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class KafkaProducerService {
@@ -15,8 +16,18 @@ public class KafkaProducerService {
     }
 
     public void sendRecommendations(String userId, List<String> productIds) {
-        RecommendationDTO dto = new RecommendationDTO(userId, productIds);
-        kafkaTemplate.send(TOPIC, dto);
-        System.out.println("📤 Recommandations envoyées → userId=" + userId + " | produits=" + productIds);
+        try {
+            Long userIdLong = Long.parseLong(userId);
+            List<Long> productIdsLong = productIds.stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+            RecommendationDTO dto = new RecommendationDTO(userIdLong, productIdsLong);
+            kafkaTemplate.send(TOPIC, dto);
+            System.out.println("📤 Sent → userId=" + userId + " | produits=" + productIds);
+
+        } catch (NumberFormatException e) {
+            System.err.println("❌ Erreur conversion IDs : " + e.getMessage());
+        }
     }
 }
