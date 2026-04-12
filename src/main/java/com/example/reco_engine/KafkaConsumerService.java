@@ -23,10 +23,8 @@ public class KafkaConsumerService {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
-            
             UserEvent event = mapper.readValue(message, UserEvent.class);
 
-            // Ajouter timestamp automatiquement si absent
             if (event.getTimestamp() == null) {
                 event.setTimestamp(LocalDateTime.now());
             }
@@ -34,17 +32,16 @@ public class KafkaConsumerService {
             System.out.println("📩 Event reçu :"
                 + " userId=" + event.getUserId()
                 + " | productId=" + event.getProductId()
-                + " | eventType=" + event.getEventType()
-                + " | timestamp=" + event.getTimestamp());
+                + " | eventType=" + event.getEventType());
 
-            // 1. Stocker l'événement
             eventRepo.save(event);
 
-            // 2. Mettre à jour recommandations selon eventType
-            if (event.getEventType().equals("view") || 
+            if (event.getEventType().equals("view") ||
                 event.getEventType().equals("click")) {
+                // ← passe userId en plus
                 recoService.updateRecommendations(
-                    event.getProductId(), 
+                    event.getUserId(),
+                    event.getProductId(),
                     event.getEventType()
                 );
             }
