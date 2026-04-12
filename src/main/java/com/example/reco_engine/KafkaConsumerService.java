@@ -11,11 +11,14 @@ public class KafkaConsumerService {
 
     private final EventRepository eventRepo;
     private final RecommendationService recoService;
+    private final ProductRepository productRepo;
 
     public KafkaConsumerService(EventRepository eventRepo,
-                                RecommendationService recoService) {
+                                RecommendationService recoService,
+                                ProductRepository productRepo) {
         this.eventRepo = eventRepo;
         this.recoService = recoService;
+        this.productRepo = productRepo;
     }
 
     @KafkaListener(topics = "user-interactions", groupId = "reco-group")
@@ -23,8 +26,18 @@ public class KafkaConsumerService {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
-            UserEvent event = mapper.readValue(message, UserEvent.class);
 
+            // Read full DTO — contains both event AND product
+            UserInteractionDTO dto = mapper.readValue(message, UserInteractionDTO.class);
+            UserEvent event = dto.getEvent();
+            Product incoming = dto.getProduct();
+
+            if (event == null || incoming == null) {
+                System.err.println("❌ DTO incomplet — event ou product est null");
+                return;
+            }
+
+            // Set timestamp if missing
             if (event.getTimestamp() == null) {
                 event.setTimestamp(LocalDateTime.now());
             }
@@ -32,22 +45,44 @@ public class KafkaConsumerService {
             System.out.println("📩 Event reçu :"
                 + " userId=" + event.getUserId()
                 + " | productId=" + event.getProductId()
-                + " | eventType=" + event.getEventType());
+                + " | eventType=" + event.getEventType()
+                + " | category=" + incoming.getCategory()
+                + " | color=" + incoming.getColor());
 
+            // 1. Save the event to MongoDB
             eventRepo.save(event);
 
-            if (event.getEventType().equals("view") ||
-                event.getEventType().equals("click")) {
-                // ← passe userId en plus
+            // 2. Save product to MongoDB if not already there
+            String productIdStr = String.valueOf(event.getProductId());
+            if (!productRepo.existsById(productIdStr)) {
+                Product p = new Product();
+                p.setId(productIdStr);
+                p.setCategory(incoming.getCategory());
+                p.setColor(incoming.getColor());
+                p.setMotif(incoming.getMotif());
+                p.setType(incoming.getType());
+                p.setPrice(incoming.getPrice());
+                p.setImage(incoming.getImage());
+                productRepo.save(p);
+                System.out.println("✅ Nouveau produit sauvegardé dans MongoDB : id=" + productIdStr
+                    + " | category=" + incoming.getCategory());
+            } else {
+                System.out.println("ℹ️ Produit déjà en MongoDB : id=" + productIdStr);
+            }
+
+            // 3. Run recommendation engine
+            if (event.getEventType().equals("click") ||
+                event.getEventType().equals("view")) {
                 recoService.updateRecommendations(
                     event.getUserId(),
-                    event.getProductId(),
+                    productIdStr,
                     event.getEventType()
                 );
             }
 
         } catch (Exception e) {
             System.err.println("❌ Erreur parsing event: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
