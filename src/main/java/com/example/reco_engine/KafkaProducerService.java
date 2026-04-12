@@ -2,21 +2,21 @@ package com.example.reco_engine;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class KafkaProducerService {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, RecommendationDTO> kafkaTemplate;
     private static final String TOPIC = "recommended-products";
 
-    public KafkaProducerService(KafkaTemplate<String, String> kafkaTemplate) {
+    public KafkaProducerService(KafkaTemplate<String, RecommendationDTO> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendRecommendations(String userId, java.util.List<String> productIds) {
-        String json = "{\"userId\":\"" + userId + "\","
-                    + "\"recommendedProductIds\":" + productIds + "}";
-        kafkaTemplate.send(TOPIC, json);
-        System.out.println("📤 Recommandations envoyées → " + json);
+    public void sendRecommendations(String userId, List<String> productIds) {
+        RecommendationDTO dto = new RecommendationDTO(userId, productIds);
+        kafkaTemplate.send(TOPIC, dto);
+        System.out.println("📤 Recommandations envoyées → userId=" + userId + " | produits=" + productIds);
     }
 }

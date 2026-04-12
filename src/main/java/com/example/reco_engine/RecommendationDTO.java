@@ -16,7 +16,5 @@ public class RecommendationDTO {
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
     public List<String> getRecommendedProductIds() { return recommendedProductIds; }
-    public void setRecommendedProductIds(List<String> ids) { 
-        this.recommendedProductIds = ids; 
-    }
+    public void setRecommendedProductIds(List<String> ids) { this.recommendedProductIds = ids; }
 }
