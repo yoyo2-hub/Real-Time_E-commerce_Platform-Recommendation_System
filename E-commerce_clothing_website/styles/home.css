@@ -1,0 +1,48 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background-attachment: fixed;
+  background-color: #f9f7fa;
+  overflow-x: clip;
+}
+.image-container {
+  background-color: #f9f7fa;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.home-image {
+  width: auto;
+  height: 550px;
+  display: block;
+  margin-bottom: -100px;
+}
+
+.container {
+  width: 75%;
+  margin: 0 auto;
+  background-color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  
+  position: relative;
+  z-index: 10;
+}
+
+.container ul {
+  list-style: none;
+  padding: 40px;
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  border-radius: 10px;
+}
+
+.container li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}

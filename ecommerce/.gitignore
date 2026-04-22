@@ -1,0 +1,73 @@
+# =========================
+# Maven / Gradle / Build
+# =========================
+target/
+build/
+out/
+.mvn/
+!mvn/wrapper/maven-wrapper.properties
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# =========================
+# IDE - IntelliJ / STS / NetBeans / VS Code
+# =========================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.sts4-cache
+
+nbproject/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+.vscode/
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Environment & Secrets
+# =========================
+.env
+.env.*
+
+application-local.properties
+application-local.yml
+
+# =========================
+# Spring Boot / DB files
+# =========================
+*.h2.db
+
+# =========================
+# Optional uploads/storage
+# =========================
+uploads/
+storage/
+
+# Sensitive Spring Boot config
+src/main/resources/application.properties
+
+# Kafka / SSL truststore
+src/main/resources/client.truststore.jks

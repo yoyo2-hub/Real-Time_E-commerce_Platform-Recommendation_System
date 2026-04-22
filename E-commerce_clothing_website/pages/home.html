@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="stylesheet" href="/styles/navbar.css">
+  <link rel="stylesheet" href="/styles/home.css">
+  <link rel="stylesheet" href="/styles/products.css">
+    <link rel="stylesheet" href="/styles/womenpage.css">
+
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+  <div class="image-container">
+    <img src="/images/image_home3.png" alt="new arrivals" class="home-image">
+  </div>
+  <div class="container">
+  <ul>
+    <li>
+  <img src="/images/icons8-rejouer-96.png" class="icon">
+  <div class="icon-text">
+    Free Returns<br>within 30 days
+  </div>
+</li>
+    <li>
+      <img src="/images/icons8-sécurité-64.png" class="icon">
+      <div class="icon-text">
+        100% Secure<br>Payment Online
+      </div>
+    </li>
+    <li>
+      <img src="/images/icons8-remise-80.png" class="icon">
+      <div class="icon-text">
+        Best Prices<br>Guaranteed
+      </div>
+    </li>
+  </ul>
+</div>
+  <div class="user_clothes">
+    <h2>Your Liked Products</h2>
+    <div id="liked-products-container" class="product-list"></div>
+  </div>
+  <div class="user_clothes">
+    <h2>Recommended for You</h2>
+    <div id="recommended-products-container" class="product-list"></div>
+</div>
+  <script src="/dynamic/script.js"></script>
+  <script>
+      fetch('navbar.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('navbar-placeholder').innerHTML = data;
+        })
+        .catch(error => console.error('Error loading navbar:', error));
+
+      loadLikedProducts(); 
+      loadRecommendedProducts();
+  </script>
+  </body>
+</html>

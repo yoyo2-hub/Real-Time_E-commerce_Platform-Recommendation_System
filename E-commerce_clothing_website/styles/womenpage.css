@@ -1,0 +1,12 @@
+.men_clothes{
+ margin:50px;
+}
+.user_clothes{
+  margin: 80px;
+}
+.user_clothes h2{
+  font-size: 34px;
+  margin-bottom: 50px;
+  display: block;
+  text-align: center;
+} 

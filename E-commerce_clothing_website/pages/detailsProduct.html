@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="/styles/general.css">
+    <link rel="stylesheet" href="/styles/navbar.css">
+    <link rel="stylesheet" href="/styles/detailsProduct.css">
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+
+    <!-- Product Details Section -->
+    <div class="details-section">
+        <div id="product-details"></div>
+    </div>
+
+    <!-- AI Recommendations from Friend -->
+    <div class="recommendations-section">
+        <h3>Recommended Products for You</h3>
+        <div id="ai-recommendations-container" class="recommendations-grid"></div>
+    </div>
+
+    <script>
+        fetch('navbar.html')
+            .then(response => response.text())
+            .then(data => { document.getElementById('navbar-placeholder').innerHTML = data; })
+            .catch(error => console.error('Error loading navbar:', error));
+    </script>
+    <script src="/dynamic/script.js"></script>
+    <script>
+        loadProductDetails();
+    </script>
+</body>
+</html>
